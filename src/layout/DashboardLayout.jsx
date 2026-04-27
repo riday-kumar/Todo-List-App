@@ -1,55 +1,48 @@
-import { useState } from "react";
-import Task from "./Task";
-import bg from "./assets/bg.png";
+import React from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { NavLink, Outlet } from "react-router";
 
-const Todo = () => {
-  const [start, setStart] = useState(false);
-  const handleStart = () => {};
+const DashboardLayout = () => {
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         {/* Navbar */}
-        <nav className="navbar w-full bg-base-300">
-          <label
-            htmlFor="my-drawer-4"
-            aria-label="open sidebar"
-            className="btn btn-square btn-ghost"
-          >
-            {/* Sidebar toggle icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill="none"
-              stroke="currentColor"
-              className="my-1.5 inline-block size-4"
+        <nav className="navbar w-full bg-base-300 flex justify-between">
+          <div className="flex justify-center items-center">
+            <label
+              htmlFor="my-drawer-4"
+              aria-label="open sidebar"
+              className="btn btn-square btn-ghost"
             >
-              <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-              <path d="M9 4v16"></path>
-              <path d="M14 10l2 2l-2 2"></path>
-            </svg>
-          </label>
-          <div className="px-4">My Todo List</div>
+              {/* Sidebar toggle icon */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+                strokeWidth="2"
+                fill="none"
+                stroke="currentColor"
+                className="my-1.5 inline-block size-4"
+              >
+                <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                <path d="M9 4v16"></path>
+                <path d="M14 10l2 2l-2 2"></path>
+              </svg>
+            </label>
+            <div className="px-4">Navbar Title</div>
+          </div>
+
+          {/* user */}
+          <div className="flex justify-center items-center gap-3">
+            <button className="btn btn-sm btn-primary">Add Task</button>
+            <FaUserCircle className="text-3xl" />
+          </div>
         </nav>
         {/* Page content here */}
         <div className="p-4">
-          {!start ? (
-            <div className="flex flex-col gap-5 justify-center items-center h-dvh">
-              <img src={bg} alt="" />
-              <p className="text-2xl font-bold">Capture Now, Plan Later</p>
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={() => setStart(!start)}
-              >
-                + Add Task
-              </button>
-            </div>
-          ) : (
-            <Task></Task>
-          )}
+          <Outlet></Outlet>
         </div>
       </div>
 
@@ -88,9 +81,10 @@ const Todo = () => {
 
             {/* List item */}
             <li>
-              <button
+              <NavLink
+                to="/add"
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Settings"
+                data-tip="Add Task"
               >
                 {/* Settings icon */}
                 <svg
@@ -108,8 +102,8 @@ const Todo = () => {
                   <circle cx="17" cy="17" r="3"></circle>
                   <circle cx="7" cy="7" r="3"></circle>
                 </svg>
-                <span className="is-drawer-close:hidden">Settings</span>
-              </button>
+                <span className="is-drawer-close:hidden">Add Task</span>
+              </NavLink>
             </li>
           </ul>
         </div>
@@ -118,4 +112,4 @@ const Todo = () => {
   );
 };
 
-export default Todo;
+export default DashboardLayout;

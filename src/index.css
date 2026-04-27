@@ -5,3 +5,7 @@ input,
 textarea {
   border: 3px solid gray;
 }
+
+a.active {
+  color: rgb(0, 199, 33);
+}
