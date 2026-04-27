@@ -1,5 +1,7 @@
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { MdLogout } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
 
 const DashboardLayout = () => {
@@ -8,7 +10,7 @@ const DashboardLayout = () => {
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         {/* Navbar */}
-        <nav className="navbar w-full bg-base-300 flex justify-between">
+        <nav className="navbar w-full bg-white flex justify-between">
           <div className="flex justify-center items-center">
             <label
               htmlFor="my-drawer-4"
@@ -31,7 +33,9 @@ const DashboardLayout = () => {
                 <path d="M14 10l2 2l-2 2"></path>
               </svg>
             </label>
-            <div className="px-4">Navbar Title</div>
+            <div className="px-4 font-bold text-2xl text-primary">
+              Focus Flow
+            </div>
           </div>
 
           {/* user */}
@@ -41,7 +45,7 @@ const DashboardLayout = () => {
           </div>
         </nav>
         {/* Page content here */}
-        <div className="p-4">
+        <div className="p-4 bg-[#f8f9ff] ">
           <Outlet></Outlet>
         </div>
       </div>
@@ -52,7 +56,7 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+        <div className="bg-[#f8fafc] flex min-h-full flex-col items-start is-drawer-close:w-14 is-drawer-open:w-64">
           {/* Sidebar content here */}
           <ul className="menu w-full grow">
             {/* List item */}
@@ -106,6 +110,23 @@ const DashboardLayout = () => {
               </NavLink>
             </li>
           </ul>
+          <button
+            className="btn btn-lg btn-primary btn-outline is-drawer-close:tooltip is-drawer-close:tooltip-right"
+            data-tip="Sign In With Google"
+          >
+            {" "}
+            <FcGoogle />{" "}
+            <span className="is-drawer-close:hidden">Sign In With Google</span>
+          </button>
+
+          <button
+            className="btn btn-lg btn-primary btn-outline is-drawer-close:tooltip is-drawer-close:tooltip-right"
+            data-tip="Sign Out"
+          >
+            {" "}
+            <MdLogout />{" "}
+            <span className="is-drawer-close:hidden">Sign Out</span>
+          </button>
         </div>
       </div>
     </div>
