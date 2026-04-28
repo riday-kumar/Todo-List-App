@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useRef } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { MdLogout } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
 
 const DashboardLayout = () => {
+  const addModalRef = useRef("add_modal");
+  const closeAddModal = (e) => {
+    e.preventDefault();
+    addModalRef.current.close();
+  };
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -40,7 +46,12 @@ const DashboardLayout = () => {
 
           {/* user */}
           <div className="flex justify-center items-center gap-3">
-            <button className="btn btn-sm btn-primary">Add Task</button>
+            <button
+              onClick={() => addModalRef.current.showModal()}
+              className="btn btn-sm btn-primary"
+            >
+              Add Task
+            </button>
             <FaUserCircle className="text-3xl" />
           </div>
         </nav>
@@ -85,7 +96,7 @@ const DashboardLayout = () => {
 
             {/* List item */}
             <li>
-              <NavLink
+              <button
                 to="/add"
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Add Task"
@@ -107,7 +118,7 @@ const DashboardLayout = () => {
                   <circle cx="7" cy="7" r="3"></circle>
                 </svg>
                 <span className="is-drawer-close:hidden">Add Task</span>
-              </NavLink>
+              </button>
             </li>
           </ul>
           <button
@@ -129,6 +140,57 @@ const DashboardLayout = () => {
           </button>
         </div>
       </div>
+      {/* ------------------ add modal--------------- */}
+      <dialog ref={addModalRef} className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h1 className="text-center text-3xl my-5">My Next Task</h1>
+
+          <div className="modal-action">
+            <form className="dialog w-[90%] mx-auto">
+              <fieldset className="fieldset *:w-full text-xl">
+                <input
+                  type="text"
+                  name="title"
+                  className="input h-12 font-medium"
+                  placeholder="Task Title"
+                />
+                <br />
+                <textarea
+                  name="description"
+                  placeholder="Task Description"
+                  className="input textarea"
+                ></textarea>
+                <br />
+                <label htmlFor="priority">Task Priority</label>
+                <select name="priority" id="" className="border-[3px]">
+                  <option className="text-red-500" value="High">
+                    High Priority
+                  </option>
+                  <option className="text-yellow-500" value="Medium">
+                    Medium Priority
+                  </option>
+                  <option value="Low">Low Priority</option>
+                </select>
+                <br />
+                <label htmlFor="date">Date</label>
+                <input type="datetime-local" name="date" id="" />
+
+                <div className="flex gap-2 mt-5">
+                  <button
+                    type="submit"
+                    className="btn btn-success text-white w-28 font-bold"
+                  >
+                    Add
+                  </button>
+                  <button className="btn w-28" onClick={closeAddModal}>
+                    Close
+                  </button>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };
