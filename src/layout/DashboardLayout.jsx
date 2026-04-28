@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { MdLogout } from "react-icons/md";
@@ -9,15 +9,23 @@ import Avatar from "daisyui/components/avatar";
 
 const DashboardLayout = () => {
   const addModalRef = useRef("add_modal");
+  const [error, setError] = useState(null);
 
   const { googleLogIn, logOut, user } = useAuth();
-  console.log(user);
 
   const handleGoogleLogin = () => {
     googleLogIn()
       .then((result) => {
         toast.success("Log in Successful");
-        console.log(result);
+        const newUser = { email: result.user.email };
+        // const userEmail = result.
+        fetch("http://localhost:3000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -37,9 +45,33 @@ const DashboardLayout = () => {
     addModalRef.current.close();
   };
 
+  // add Task handler
   const handleAddTask = (e) => {
     e.preventDefault();
     addModalRef.current.showModal();
+  };
+
+  const handleAddTaskForm = (e) => {
+    e.preventDefault();
+    const taskTitle = e.target.title.value;
+    const taskDescription = e.target.description.value;
+    const taskPriority = e.target.priority.value;
+    const taskTime = e.target.date.value;
+    if (!taskTitle) {
+      setError("Must Need a Task Title");
+      return;
+    }
+    if (!taskTime) {
+      setError("Need Date & Time");
+      return;
+    }
+
+    console.log({
+      taskTitle,
+      taskDescription,
+      taskPriority,
+      taskTime,
+    });
   };
 
   return (
@@ -164,7 +196,11 @@ const DashboardLayout = () => {
           <h1 className="text-center text-3xl my-5">My Next Task</h1>
 
           <div className="modal-action">
-            <form className="dialog w-[90%] mx-auto">
+            <form
+              onSubmit={handleAddTaskForm}
+              className="dialog w-[90%] mx-auto"
+            >
+              {error && <p className="text-red-600 font-bold mb-3">{error}</p>}
               <fieldset className="fieldset *:w-full text-xl">
                 <input
                   type="text"
