@@ -3,12 +3,43 @@ import { FaUserCircle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { MdLogout } from "react-icons/md";
 import { NavLink, Outlet } from "react-router";
+import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
+import Avatar from "daisyui/components/avatar";
 
 const DashboardLayout = () => {
   const addModalRef = useRef("add_modal");
+
+  const { googleLogIn, logOut, user } = useAuth();
+  console.log(user);
+
+  const handleGoogleLogin = () => {
+    googleLogIn()
+      .then((result) => {
+        toast.success("Log in Successful");
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleLogOut = () => {
+    logOut()
+      .then((res) => {
+        toast.success("Log Our Successfully");
+      })
+      .catch((err) => console.log(err));
+  };
+
   const closeAddModal = (e) => {
     e.preventDefault();
     addModalRef.current.close();
+  };
+
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    addModalRef.current.showModal();
   };
 
   return (
@@ -46,13 +77,18 @@ const DashboardLayout = () => {
 
           {/* user */}
           <div className="flex justify-center items-center gap-3">
-            <button
-              onClick={() => addModalRef.current.showModal()}
-              className="btn btn-sm btn-primary"
-            >
+            <button onClick={handleAddTask} className="btn btn-sm btn-primary">
               Add Task
             </button>
-            <FaUserCircle className="text-3xl" />
+            {user ? (
+              <img
+                className="border-2 border-primary w-10 h-10 rounded-full"
+                src={user.photoURL}
+                alt=""
+              />
+            ) : (
+              <FaUserCircle className="text-3xl" />
+            )}
           </div>
         </nav>
         {/* Page content here */}
@@ -95,49 +131,31 @@ const DashboardLayout = () => {
             </li>
 
             {/* List item */}
-            <li>
-              <button
-                to="/add"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Add Task"
-              >
-                {/* Settings icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M20 7h-9"></path>
-                  <path d="M14 17H5"></path>
-                  <circle cx="17" cy="17" r="3"></circle>
-                  <circle cx="7" cy="7" r="3"></circle>
-                </svg>
-                <span className="is-drawer-close:hidden">Add Task</span>
-              </button>
-            </li>
           </ul>
-          <button
-            className="btn btn-lg btn-primary btn-outline is-drawer-close:tooltip is-drawer-close:tooltip-right"
-            data-tip="Sign In With Google"
-          >
-            {" "}
-            <FcGoogle />{" "}
-            <span className="is-drawer-close:hidden">Sign In With Google</span>
-          </button>
-
-          <button
-            className="btn btn-lg btn-primary btn-outline is-drawer-close:tooltip is-drawer-close:tooltip-right"
-            data-tip="Sign Out"
-          >
-            {" "}
-            <MdLogout />{" "}
-            <span className="is-drawer-close:hidden">Sign Out</span>
-          </button>
+          {/* google sign in button */}
+          {user ? (
+            <button
+              onClick={handleLogOut}
+              className="btn btn-lg btn-primary btn-outline is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              data-tip="Sign Out"
+            >
+              {" "}
+              <MdLogout />{" "}
+              <span className="is-drawer-close:hidden">Sign Out</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleGoogleLogin}
+              className="btn btn-lg btn-primary btn-outline is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              data-tip="Sign In With Google"
+            >
+              {" "}
+              <FcGoogle />{" "}
+              <span className="is-drawer-close:hidden">
+                Sign In With Google
+              </span>
+            </button>
+          )}
         </div>
       </div>
       {/* ------------------ add modal--------------- */}
