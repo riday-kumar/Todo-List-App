@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TaskOverview from "../../components/TaskOverview";
 import Momentum from "./Momentum";
+import useAuth from "../../hooks/useAuth";
 
 const Home = () => {
+  const { user, loading } = useAuth();
+  const [tasks, setTasks] = useState([]);
+  const email = user?.email;
+  useEffect(() => {
+    fetch(`http://localhost:3000/all-task?email=${email}`, {
+      headers: {
+        authorization: `Bearer ${user?.accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setTasks(data));
+  }, [user, email]);
+
+  // const handleUpdateTask = (updatedTask) => {
+  //   const newTasks = tasks.map((task) =>
+  //     task._id === updatedTask._id ? updatedTask : task,
+  //   );
+  //   setTasks(newTasks);
+  // };
+
+  if (loading) {
+    return <span>Loading...</span>;
+  }
+
   return (
     <div className="w-10/12 mx-auto h-dvh">
       <div className="grid grid-cols-5 justify-center gap-10 w-full mt-10">
@@ -14,7 +39,7 @@ const Home = () => {
               task remaining
             </p>
           </div>
-          <TaskOverview></TaskOverview>
+          <TaskOverview tasks={tasks} onUpdate={setTasks}></TaskOverview>
         </div>
         <aside className="col-span-2">
           <Momentum></Momentum>

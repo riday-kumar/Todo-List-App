@@ -13,6 +13,8 @@ const DashboardLayout = () => {
 
   const { googleLogIn, logOut, user } = useAuth();
 
+  console.log(user);
+
   const handleGoogleLogin = () => {
     googleLogIn()
       .then((result) => {
@@ -45,18 +47,20 @@ const DashboardLayout = () => {
     addModalRef.current.close();
   };
 
-  // add Task handler
   const handleAddTask = (e) => {
     e.preventDefault();
     addModalRef.current.showModal();
   };
 
+  // add Task handler
   const handleAddTaskForm = (e) => {
     e.preventDefault();
     const taskTitle = e.target.title.value;
     const taskDescription = e.target.description.value;
     const taskPriority = e.target.priority.value;
     const taskTime = e.target.date.value;
+    const userEmail = user.email;
+    const completedTask = false;
     if (!taskTitle) {
       setError("Must Need a Task Title");
       return;
@@ -66,12 +70,30 @@ const DashboardLayout = () => {
       return;
     }
 
-    console.log({
+    const newTask = {
+      userEmail,
       taskTitle,
       taskDescription,
       taskPriority,
       taskTime,
-    });
+      completedTask,
+    };
+
+    fetch(`http://localhost:3000/add-task`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newTask),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          toast.success("Task added successfully. Time to make it happen.");
+          e.target.reset();
+          addModalRef.current.close();
+        }
+      });
   };
 
   return (
@@ -191,60 +213,79 @@ const DashboardLayout = () => {
         </div>
       </div>
       {/* ------------------ add modal--------------- */}
-      <dialog ref={addModalRef} className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <h1 className="text-center text-3xl my-5">My Next Task</h1>
 
-          <div className="modal-action">
-            <form
-              onSubmit={handleAddTaskForm}
-              className="dialog w-[90%] mx-auto"
-            >
-              {error && <p className="text-red-600 font-bold mb-3">{error}</p>}
-              <fieldset className="fieldset *:w-full text-xl">
-                <input
-                  type="text"
-                  name="title"
-                  className="input h-12 font-medium"
-                  placeholder="Task Title"
-                />
-                <br />
-                <textarea
-                  name="description"
-                  placeholder="Task Description"
-                  className="input textarea"
-                ></textarea>
-                <br />
-                <label htmlFor="priority">Task Priority</label>
-                <select name="priority" id="" className="border-[3px]">
-                  <option className="text-red-500" value="High">
-                    High Priority
-                  </option>
-                  <option className="text-yellow-500" value="Medium">
-                    Medium Priority
-                  </option>
-                  <option value="Low">Low Priority</option>
-                </select>
-                <br />
-                <label htmlFor="date">Date</label>
-                <input type="datetime-local" name="date" id="" />
+      {user ? (
+        <dialog
+          ref={addModalRef}
+          className="modal modal-bottom sm:modal-middle"
+        >
+          <div className="modal-box">
+            <h1 className="text-center text-3xl my-5">My Next Task</h1>
 
-                <div className="flex gap-2 mt-5">
-                  <button
-                    type="submit"
-                    className="btn btn-success text-white w-28 font-bold"
-                  >
-                    Add
-                  </button>
-                  <button className="btn w-28" onClick={closeAddModal}>
-                    Close
-                  </button>
-                </div>
-              </fieldset>
-            </form>
+            <div className="modal-action">
+              <form
+                onSubmit={handleAddTaskForm}
+                className="dialog w-[90%] mx-auto"
+              >
+                {error && (
+                  <p className="text-red-600 font-bold mb-3">{error}</p>
+                )}
+                <fieldset className="fieldset *:w-full text-xl">
+                  <input
+                    type="text"
+                    name="title"
+                    className="input h-12 font-medium"
+                    placeholder="Task Title"
+                  />
+                  <br />
+                  <textarea
+                    name="description"
+                    placeholder="Task Description"
+                    className="input textarea"
+                  ></textarea>
+                  <br />
+                  <label htmlFor="priority">Task Priority</label>
+                  <select name="priority" id="" className="border-[3px]">
+                    <option className="text-red-500" value="High">
+                      High Priority
+                    </option>
+                    <option className="text-yellow-500" value="Medium">
+                      Medium Priority
+                    </option>
+                    <option value="Low">Low Priority</option>
+                  </select>
+                  <br />
+                  <label htmlFor="date">Date</label>
+                  <input type="datetime-local" name="date" id="" />
+
+                  <div className="flex gap-2 mt-5">
+                    <button
+                      type="submit"
+                      className="btn btn-success text-white w-28 font-bold"
+                    >
+                      Add
+                    </button>
+                    <button className="btn w-28" onClick={closeAddModal}>
+                      Close
+                    </button>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
           </div>
-        </div>
-      </dialog>
+        </dialog>
+      ) : (
+        <dialog ref={addModalRef} id="my_modal_2" className="modal">
+          <div className="modal-box bg-primary text-white">
+            <h3 className="font-bold text-lg text-center capitalize">
+              Ready to get productive? Just log in to add your first task.
+            </h3>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+      )}
     </div>
   );
 };

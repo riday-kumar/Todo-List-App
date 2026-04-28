@@ -1,18 +1,63 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 
-const TaskOverview = () => {
+const TaskOverview = ({ tasks, onUpdate }) => {
   const updateModalRef = useRef("update_modal");
+  const [currentTask, setCurrentTask] = useState({});
+  const [priority, setPriority] = useState("");
+
+  // useEffect(() => {
+  //   if (currentTask?.taskPriority) {
+  //     setPriority(currentTask.taskPriority);
+  //   }
+  // }, [currentTask]);
 
   const closeAddModal = (e) => {
     e.preventDefault();
     updateModalRef.current.close();
   };
 
-  const handleUpdateTask = (e) => {
-    e.preventDefault();
+  const handleUpdateTaskBtn = (id) => {
+    // console.log(id);
+    // e.preventDefault();
     updateModalRef.current.showModal();
+    fetch(`http://localhost:3000/all-task/${id}`)
+      .then((res) => res.json())
+      .then((data) => setCurrentTask({ ...data }));
+  };
+
+  // update form here
+  const handleUpdateTaskForm = (e, id) => {
+    e.preventDefault();
+    console.log(id);
+    const updatedTitle = e.target.updatedTitle.value;
+    const updatedDescription = e.target.updatedDescription.value;
+    const updatedPriority = e.target.updatedPriority.value;
+    const updatedDate = e.target.updatedDate.value;
+
+    const updatedTask = {
+      updatedTitle,
+      updatedDescription,
+      updatedPriority,
+      updatedDate,
+    };
+
+    // console.log(updatedTask);
+
+    fetch(`http://localhost:3000/update-task/${id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(updatedTask),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          updateModalRef.current.close();
+        }
+      });
   };
 
   const handleTaskDelete = () => {
@@ -20,103 +65,148 @@ const TaskOverview = () => {
   };
 
   return (
-    <div className="bg-white shadow-md border-l-4 border-blue-500  p-4 rounded-2xl flex justify-between items-center">
-      <div className="flex justify-center items-center gap-5">
-        {/* completed task input */}
-        <div>
-          <input
-            type="checkbox"
-            defaultChecked
-            className="checkbox checkbox-primary"
-          />
-        </div>
-        {/* task name , type ,time */}
-        <div>
-          <h2 className="text-2xl font-medium mb-3">
-            Finalize Project Proposal
-          </h2>
-          <div className="flex justify-start items-center gap-3">
-            <p className="badge badge-soft badge-secondary uppercase font-medium">
-              HIGH
-            </p>
-            <div className="flex justify-center items-center gap-2">
-              <FaClock />
-              <p>9.00 AM</p>
+    <>
+      {tasks.map((task) => (
+        <div
+          key={task._id}
+          className="bg-white shadow-md border-l-4 border-blue-500  p-4 rounded-2xl flex justify-between items-center"
+        >
+          <div className="flex justify-center items-center gap-5">
+            {/* completed task input */}
+            <div>
+              <input
+                type="checkbox"
+                defaultChecked
+                className="checkbox checkbox-primary"
+              />
+            </div>
+            {/*---------- task name , type ,time --------*/}
+            <div>
+              <h2 className="text-2xl font-medium mb-3">{task.taskTitle}</h2>
+              <div className="flex justify-start items-center gap-3">
+                <p
+                  className={`badge badge-soft badge-secondary uppercase font-bold ${task.taskPriority == "High" ? "text-red-500" : task.taskPriority == "Medium" ? "text-yellow-500" : "text-black"}`}
+                >
+                  {task.taskPriority}
+                </p>
+                <div className="flex justify-center items-center gap-2">
+                  <FaClock />
+
+                  <p>
+                    {new Date(task.taskTime).toLocaleDateString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      {/* update and delete button */}
-      <div className="text-2xl flex justify-center items-center gap-4">
-        <button
-          onClick={handleUpdateTask}
-          className="btn btn-sm btn-warning text-white"
-        >
-          <MdModeEdit className="text-2xl" />
-        </button>
-        <button
-          onClick={handleTaskDelete}
-          className="btn btn-sm btn-error text-white"
-        >
-          <MdDelete className="text-2xl" />
-        </button>
-      </div>
-
-      {/* ------------------ Update modal--------------- */}
-      <dialog
-        ref={updateModalRef}
-        className="modal modal-bottom sm:modal-middle"
-      >
-        <div className="modal-box">
-          <h1 className="text-center text-3xl my-5">My Next Task</h1>
-
-          <div className="modal-action">
-            <form className="dialog w-[90%] mx-auto">
-              <fieldset className="fieldset *:w-full text-xl">
-                <input
-                  type="text"
-                  name="title"
-                  className="input h-12 font-medium"
-                  placeholder="Task Title"
-                />
-                <br />
-                <textarea
-                  name="description"
-                  placeholder="Task Description"
-                  className="input textarea"
-                ></textarea>
-                <br />
-                <label htmlFor="priority">Task Priority</label>
-                <select name="priority" id="" className="border-[3px]">
-                  <option className="text-red-500" value="High">
-                    High Priority
-                  </option>
-                  <option className="text-yellow-500" value="Medium">
-                    Medium Priority
-                  </option>
-                  <option value="Low">Low Priority</option>
-                </select>
-                <br />
-                <label htmlFor="date">Date</label>
-                <input type="datetime-local" name="date" id="" />
-
-                <div className="flex gap-2 mt-5">
-                  <button
-                    type="submit"
-                    className="btn btn-success text-white w-28 font-bold"
-                  >
-                    Add
-                  </button>
-                  <button className="btn w-28" onClick={closeAddModal}>
-                    Close
-                  </button>
-                </div>
-              </fieldset>
-            </form>
+          {/* update and delete button */}
+          <div className="text-2xl flex justify-center items-center gap-4">
+            {/* ---------- update Button ---------- */}
+            <button
+              onClick={() => handleUpdateTaskBtn(task._id)}
+              className="btn btn-sm btn-warning text-white"
+            >
+              <MdModeEdit className="text-2xl" />
+            </button>
+            {/* --------- Delete Button ------- */}
+            <button
+              onClick={handleTaskDelete}
+              className="btn btn-sm btn-error text-white"
+            >
+              <MdDelete className="text-2xl" />
+            </button>
           </div>
+
+          {/* ------------------ Update modal--------------- */}
+          <dialog
+            ref={updateModalRef}
+            className="modal modal-bottom sm:modal-middle"
+          >
+            <div className="modal-box">
+              <h1 className="text-center text-3xl my-5">My Next Task</h1>
+
+              <div className="modal-action">
+                {/* ---------- update From ------------ */}
+                <form
+                  onSubmit={(e) => handleUpdateTaskForm(e, currentTask._id)}
+                  className="dialog w-[90%] mx-auto"
+                >
+                  <fieldset className="fieldset *:w-full text-xl">
+                    <input
+                      type="text"
+                      name="updatedTitle"
+                      className="input h-12 font-medium"
+                      placeholder="Task Title"
+                      defaultValue={currentTask?.taskTitle}
+                    />
+                    <br />
+                    <textarea
+                      name="updatedDescription"
+                      placeholder="Task Description"
+                      className="input textarea"
+                      defaultValue={currentTask?.taskDescription}
+                    ></textarea>
+                    <br />
+                    <label htmlFor="priority">Task Priority</label>
+                    {/* <select
+                      name="updatedPriority"
+                      value={priority}
+                      onChange={(e) => setPriority(e.target.value)}
+                      className="border-[3px]"
+                    >
+                      <option value="High">High Priority</option>
+                      <option value="Medium">Medium Priority</option>
+                      <option value="Low">Low Priority</option>
+                    </select> */}
+                    <select
+                      name="updatedPriority"
+                      defaultValue={currentTask?.taskPriority}
+                      id="priority"
+                      className="border-[3px]"
+                    >
+                      {" "}
+                      <option className="text-red-500" value="High">
+                        {" "}
+                        High Priority{" "}
+                      </option>{" "}
+                      <option className="text-yellow-500" value="Medium">
+                        {" "}
+                        Medium Priority{" "}
+                      </option>{" "}
+                      <option value="Low">Low Priority</option>{" "}
+                    </select>
+                    <br />
+                    <label htmlFor="date">Date</label>
+                    <input
+                      type="datetime-local"
+                      defaultValue={currentTask?.taskTime}
+                      name="updatedDate"
+                      id="date"
+                    />
+
+                    <div className="flex gap-2 mt-5">
+                      <button
+                        type="submit"
+                        className="btn btn-success text-white w-28 font-bold"
+                      >
+                        Update
+                      </button>
+                      <button className="btn w-28" onClick={closeAddModal}>
+                        Close
+                      </button>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </dialog>
         </div>
-      </dialog>
-    </div>
+      ))}
+    </>
   );
 };
 
