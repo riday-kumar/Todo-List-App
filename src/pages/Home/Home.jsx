@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TaskOverview from "../../components/TaskOverview";
-import Momentum from "./Momentum";
+import ProgressBar from "./ProgressBar";
 import useAuth from "../../hooks/useAuth";
 import Guest from "./Guest";
 
@@ -41,7 +41,7 @@ const Home = () => {
             <TaskOverview tasks={tasks}></TaskOverview>
           </div>
           <aside className="col-span-2">
-            <Momentum></Momentum>
+            <ProgressBar></ProgressBar>
           </aside>
         </div>
       ) : (
