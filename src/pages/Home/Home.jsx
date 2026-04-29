@@ -8,6 +8,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 const Home = () => {
   const { user, reload, loading } = useAuth();
   const [tasks, setTasks] = useState([]);
+  const [circleData, setCircleData] = useState([]);
 
   // const email = user.email;
   console.log(user);
@@ -19,13 +20,16 @@ const Home = () => {
         },
       })
         .then((res) => res.json())
-        .then((data) => setTasks(data));
+        .then((data) => {
+          setTasks(data);
+          setCircleData(data);
+        });
     }
   }, [user, reload]);
 
   //  task will show according to the calender
   const handleCalenderTask = (date) => {
-    console.log(date);
+    // console.log(date);
     fetch(`http://localhost:3000/all-date-task/${date}?email=${user?.email}`, {
       headers: {
         authorization: `Bearer ${user?.accessToken}`,
@@ -35,6 +39,8 @@ const Home = () => {
       .then((data) => {
         setTasks(data);
       });
+    // const filteredTask = tasks.filter((task) => task.taskTime == date);
+    // setTasks(filteredTask);
   };
 
   if (loading) {
@@ -42,7 +48,27 @@ const Home = () => {
   }
 
   const today = new Date();
-  console.log(today);
+
+  // const thatDay = new Date().toISOString().split("T")[0];
+  // const thatDay = new Date().toLocaleDateString("en-CA");
+
+  const myTotalTask = circleData.filter(
+    (task) => task.completedTask === false || task.completedTask === true,
+  ).length;
+
+  const myCompletedTask = circleData.filter(
+    (task) => task.completedTask === true,
+  ).length;
+
+  const taskCompletingProgressPer = (myCompletedTask / myTotalTask) * 100;
+  // console.log(taskCompletingProgressPer);
+
+  // console.log({ todayTotalTask, todayCompletedTask });
+  const taskRemaining = myTotalTask - myCompletedTask;
+
+  const showRemainingTask = () => {
+    setTasks(circleData);
+  };
 
   return (
     <div className="w-10/12 mx-auto h-dvh">
@@ -60,9 +86,12 @@ const Home = () => {
                     day: "numeric",
                   })}
                   <span> | </span>
-                  <span className="text-xl font-bold text-red-600">
-                    4 task remaining
-                  </span>
+                  <button
+                    onClick={showRemainingTask}
+                    className="btn btn-sm btn-dash btn-info text-xl font-bold"
+                  >
+                    {taskRemaining} task Remaining
+                  </button>
                 </p>
               </div>
               {/* ---------- calendar ----------------- */}
@@ -77,7 +106,11 @@ const Home = () => {
             <TaskOverview tasks={tasks}></TaskOverview>
           </div>
           <aside className="col-span-2">
-            <ProgressBar></ProgressBar>
+            <ProgressBar
+              taskCompletingProgressPer={taskCompletingProgressPer}
+              myCompletedTask={myCompletedTask}
+              myTotalTask={myTotalTask}
+            ></ProgressBar>
           </aside>
         </div>
       ) : (

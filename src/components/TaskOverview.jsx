@@ -10,6 +10,9 @@ const TaskOverview = ({ tasks }) => {
   const { user, reload, setReload } = useAuth();
   const [currentTask, setCurrentTask] = useState({});
 
+  // all the incomplete task will show home
+  const inCompleteTask = tasks.filter((task) => task.completedTask === false);
+
   const closeAddModal = (e) => {
     e.preventDefault();
     updateModalRef.current.close();
@@ -96,10 +99,10 @@ const TaskOverview = ({ tasks }) => {
 
   return (
     <>
-      {tasks.map((task) => (
+      {inCompleteTask.map((task) => (
         <div
           key={task._id}
-          className="bg-white shadow-md border-l-4 border-blue-500  p-4 rounded-2xl flex justify-between items-center"
+          className={`bg-white shadow-md border-l-4 ${task.taskPriority == "High" ? "border-orange-500" : task.taskPriority == "Medium" ? "border-blue-500" : "border-black"}  p-4 rounded-2xl flex justify-between items-center`}
         >
           <div className="flex justify-center items-center gap-5">
             {/* completed task input */}
@@ -115,14 +118,16 @@ const TaskOverview = ({ tasks }) => {
               <h2 className="text-2xl font-medium mb-3">{task.taskTitle}</h2>
               <div className="flex justify-start items-center gap-3">
                 <p
-                  className={`badge badge-soft badge-secondary uppercase font-bold ${task.taskPriority == "High" ? "text-red-500" : task.taskPriority == "Medium" ? "text-yellow-500" : "text-black"}`}
+                  className={`badge badge-soft badge-secondary uppercase font-bold ${task.taskPriority == "High" ? "text-red-500" : task.taskPriority == "Medium" ? "text-blue-500" : "text-black"}`}
                 >
                   {task.taskPriority}
                 </p>
                 <div className="flex justify-center items-center gap-2">
                   <FaCalendarAlt />
 
-                  <p>{new Date(task.taskTime).toLocaleDateString("en-GB")}</p>
+                  <p className="font-bold">
+                    {new Date(task.taskTime).toLocaleDateString("en-GB")}
+                  </p>
                 </div>
               </div>
             </div>
@@ -233,6 +238,11 @@ const TaskOverview = ({ tasks }) => {
           </dialog>
         </div>
       ))}
+      {inCompleteTask.length == 0 && (
+        <p className="flex justify-center items-center text-2xl font-bold text-orange-500">
+          No Task Added !
+        </p>
+      )}
     </>
   );
 };
