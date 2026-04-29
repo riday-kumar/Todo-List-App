@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { FaClock } from "react-icons/fa";
+import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
@@ -7,8 +7,7 @@ import confetti from "canvas-confetti";
 
 const TaskOverview = ({ tasks }) => {
   const updateModalRef = useRef("update_modal");
-  const { user, reload, setReload, congratulation, setCongratulation } =
-    useAuth();
+  const { user, reload, setReload } = useAuth();
   const [currentTask, setCurrentTask] = useState({});
 
   const closeAddModal = (e) => {
@@ -75,7 +74,7 @@ const TaskOverview = ({ tasks }) => {
   };
 
   // handle Complete Task
-  const handleCompleteTask = async (id) => {
+  const handleCompleteTask = (id) => {
     fetch(`http://localhost:3000/task-complete/${id}?email=${user?.email}`, {
       method: "PATCH",
       headers: {
@@ -121,15 +120,9 @@ const TaskOverview = ({ tasks }) => {
                   {task.taskPriority}
                 </p>
                 <div className="flex justify-center items-center gap-2">
-                  <FaClock />
+                  <FaCalendarAlt />
 
-                  <p>
-                    {new Date(task.taskTime).toLocaleDateString("en-GB", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </p>
+                  <p>{new Date(task.taskTime).toLocaleDateString("en-GB")}</p>
                 </div>
               </div>
             </div>
@@ -216,7 +209,7 @@ const TaskOverview = ({ tasks }) => {
                     <br />
                     <label htmlFor="date">Date</label>
                     <input
-                      type="datetime-local"
+                      type="date"
                       defaultValue={currentTask?.taskTime}
                       name="updatedDate"
                       id="date"

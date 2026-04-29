@@ -258,7 +258,7 @@ const DashboardLayout = () => {
                   </select>
                   <br />
                   <label htmlFor="date">Date</label>
-                  <input type="datetime-local" name="date" id="" />
+                  <input type="date" name="date" id="" />
 
                   <div className="flex gap-2 mt-5">
                     <button
