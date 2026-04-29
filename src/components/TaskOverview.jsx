@@ -115,7 +115,9 @@ const TaskOverview = ({ tasks }) => {
             </div>
             {/*---------- task name , type ,time --------*/}
             <div>
-              <h2 className="text-2xl font-medium mb-3">{task.taskTitle}</h2>
+              <h2 className="capitalize text-2xl font-medium mb-3">
+                {task.taskTitle}
+              </h2>
               <div className="flex justify-start items-center gap-3">
                 <p
                   className={`badge badge-soft badge-secondary uppercase font-bold ${task.taskPriority == "High" ? "text-red-500" : task.taskPriority == "Medium" ? "text-blue-500" : "text-black"}`}

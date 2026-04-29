@@ -4,6 +4,7 @@ import ProgressBar from "./ProgressBar";
 import useAuth from "../../hooks/useAuth";
 import Guest from "./Guest";
 import { FaCalendarAlt } from "react-icons/fa";
+import Loading from "../../components/Loading";
 
 const Home = () => {
   const { user, reload, loading } = useAuth();
@@ -43,10 +44,6 @@ const Home = () => {
     // setTasks(filteredTask);
   };
 
-  if (loading) {
-    return <span>Loading...</span>;
-  }
-
   const today = new Date();
 
   // const thatDay = new Date().toISOString().split("T")[0];
@@ -69,6 +66,10 @@ const Home = () => {
   const showRemainingTask = () => {
     setTasks(circleData);
   };
+
+  if (loading) {
+    return <Loading></Loading>;
+  }
 
   return (
     <div className="w-[95%] xl:w-10/12 mx-auto h-dvh">
