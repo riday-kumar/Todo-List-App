@@ -71,11 +71,11 @@ const Home = () => {
   };
 
   return (
-    <div className="w-10/12 mx-auto h-dvh">
+    <div className="w-[95%] xl:w-10/12 mx-auto h-dvh">
       {user ? (
-        <div className="grid grid-cols-5 justify-center gap-10 w-full mt-10">
-          <div className="col-span-3 space-y-10">
-            <div className="flex justify-between items-center">
+        <div className="grid lg:grid-cols-6  xl:grid-cols-5 justify-center gap-10 w-full mt-10">
+          <div className="max-lg:order-2 lg:col-span-4 xl:col-span-3 space-y-10">
+            <div className="flex max-lg:flex-col max-lg:gap-5 justify-between items-center">
               {/* --------------- today, date------- */}
               <div>
                 <p className="text-2xl">Today</p>
@@ -105,7 +105,7 @@ const Home = () => {
             </div>
             <TaskOverview tasks={tasks}></TaskOverview>
           </div>
-          <aside className="col-span-2">
+          <aside className="lg:col-span-2 xl:col-span-2">
             <ProgressBar
               taskCompletingProgressPer={taskCompletingProgressPer}
               myCompletedTask={myCompletedTask}

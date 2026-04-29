@@ -31,7 +31,9 @@ const ProgressBar = ({
           value={percentage}
           text={`${percentage}%`}
         >
-          <strong className="mt-15 text-green-500 text-xl">Done</strong>
+          <strong className="mt-16 lg:mt-10 xl:mt-15 text-green-500 text-xl">
+            Done
+          </strong>
         </CircularProgressbarWithChildren>
       </div>
       <div className="text-xl font-bold py-5">
