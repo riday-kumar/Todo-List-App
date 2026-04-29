@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [reload, setReload] = useState(false);
+  const [congratulation, setCongratulation] = useState(false);
 
   const googleLogIn = () => {
     setLoading(true);
@@ -42,6 +43,8 @@ const AuthProvider = ({ children }) => {
     logOut,
     reload,
     setReload,
+    congratulation,
+    setCongratulation,
   };
 
   return <AuthContext value={value}>{children}</AuthContext>;

@@ -3,10 +3,12 @@ import { FaClock } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import confetti from "canvas-confetti";
 
 const TaskOverview = ({ tasks }) => {
   const updateModalRef = useRef("update_modal");
-  const { user, reload, setReload } = useAuth();
+  const { user, reload, setReload, congratulation, setCongratulation } =
+    useAuth();
   const [currentTask, setCurrentTask] = useState({});
 
   const closeAddModal = (e) => {
@@ -72,6 +74,27 @@ const TaskOverview = ({ tasks }) => {
       });
   };
 
+  // handle Complete Task
+  const handleCompleteTask = async (id) => {
+    fetch(`http://localhost:3000/task-complete/${id}?email=${user?.email}`, {
+      method: "PATCH",
+      headers: {
+        authorization: `Bearer ${user?.accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          toast.success("Congratulation 🎉 Task Completed!");
+          setReload(!reload);
+          confetti({
+            particleCount: 150,
+            spread: 360,
+          });
+        }
+      });
+  };
+
   return (
     <>
       {tasks.map((task) => (
@@ -83,8 +106,8 @@ const TaskOverview = ({ tasks }) => {
             {/* completed task input */}
             <div>
               <input
+                onChange={() => handleCompleteTask(task._id)}
                 type="checkbox"
-                defaultChecked
                 className="checkbox checkbox-primary"
               />
             </div>
