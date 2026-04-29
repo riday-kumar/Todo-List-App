@@ -11,7 +11,7 @@ const DashboardLayout = () => {
   const addModalRef = useRef("add_modal");
   const [error, setError] = useState(null);
 
-  const { googleLogIn, logOut, user } = useAuth();
+  const { googleLogIn, logOut, user, reload, setReload } = useAuth();
 
   console.log(user);
 
@@ -79,10 +79,11 @@ const DashboardLayout = () => {
       completedTask,
     };
 
-    fetch(`http://localhost:3000/add-task`, {
+    fetch(`http://localhost:3000/add-task?email=${user?.email}`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        authorization: `Bearer ${user?.accessToken}`,
       },
       body: JSON.stringify(newTask),
     })
@@ -92,6 +93,7 @@ const DashboardLayout = () => {
           toast.success("Task added successfully. Time to make it happen.");
           e.target.reset();
           addModalRef.current.close();
+          setReload(!reload);
         }
       });
   };
@@ -134,10 +136,10 @@ const DashboardLayout = () => {
             <button onClick={handleAddTask} className="btn btn-sm btn-primary">
               Add Task
             </button>
-            {user ? (
+            {user?.photoURL ? (
               <img
                 className="border-2 border-primary w-10 h-10 rounded-full"
-                src={user.photoURL}
+                src={user?.photoURL}
                 alt=""
               />
             ) : (

@@ -1,9 +1,12 @@
 import React, { useRef, useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
+import useAuth from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
-const TaskOverview = ({ tasks, reload, setReload }) => {
+const TaskOverview = ({ tasks }) => {
   const updateModalRef = useRef("update_modal");
+  const { user, reload, setReload } = useAuth();
   const [currentTask, setCurrentTask] = useState({});
 
   const closeAddModal = (e) => {
@@ -47,13 +50,26 @@ const TaskOverview = ({ tasks, reload, setReload }) => {
       .then((data) => {
         if (data.acknowledged) {
           updateModalRef.current.close();
+          toast.success("Task Updated");
           setReload(!reload);
         }
       });
   };
 
-  const handleTaskDelete = () => {
-    alert("are u sure?");
+  // Task Delete Handler
+  const handleTaskDelete = (id) => {
+    fetch(`http://localhost:3000/delete-task/${id}?email=${user?.email}`, {
+      method: "DELETE",
+      headers: {
+        authorization: `Bearer ${user?.accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        toast.success("task Deleted!");
+        setReload(!reload);
+      });
   };
 
   return (
@@ -106,7 +122,7 @@ const TaskOverview = ({ tasks, reload, setReload }) => {
             </button>
             {/* --------- Delete Button ------- */}
             <button
-              onClick={handleTaskDelete}
+              onClick={() => handleTaskDelete(task._id)}
               className="btn btn-sm btn-error text-white"
             >
               <MdDelete className="text-2xl" />
