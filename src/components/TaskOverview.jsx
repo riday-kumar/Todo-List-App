@@ -1,17 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 
-const TaskOverview = ({ tasks, onUpdate }) => {
+const TaskOverview = ({ tasks, reload, setReload }) => {
   const updateModalRef = useRef("update_modal");
   const [currentTask, setCurrentTask] = useState({});
-  const [priority, setPriority] = useState("");
-
-  // useEffect(() => {
-  //   if (currentTask?.taskPriority) {
-  //     setPriority(currentTask.taskPriority);
-  //   }
-  // }, [currentTask]);
 
   const closeAddModal = (e) => {
     e.preventDefault();
@@ -19,8 +12,6 @@ const TaskOverview = ({ tasks, onUpdate }) => {
   };
 
   const handleUpdateTaskBtn = (id) => {
-    // console.log(id);
-    // e.preventDefault();
     updateModalRef.current.showModal();
     fetch(`http://localhost:3000/all-task/${id}`)
       .then((res) => res.json())
@@ -56,6 +47,7 @@ const TaskOverview = ({ tasks, onUpdate }) => {
       .then((data) => {
         if (data.acknowledged) {
           updateModalRef.current.close();
+          setReload(!reload);
         }
       });
   };
@@ -152,16 +144,7 @@ const TaskOverview = ({ tasks, onUpdate }) => {
                     ></textarea>
                     <br />
                     <label htmlFor="priority">Task Priority</label>
-                    {/* <select
-                      name="updatedPriority"
-                      value={priority}
-                      onChange={(e) => setPriority(e.target.value)}
-                      className="border-[3px]"
-                    >
-                      <option value="High">High Priority</option>
-                      <option value="Medium">Medium Priority</option>
-                      <option value="Low">Low Priority</option>
-                    </select> */}
+
                     <select
                       name="updatedPriority"
                       defaultValue={currentTask?.taskPriority}
@@ -169,15 +152,27 @@ const TaskOverview = ({ tasks, onUpdate }) => {
                       className="border-[3px]"
                     >
                       {" "}
-                      <option className="text-red-500" value="High">
-                        {" "}
+                      <option
+                        selected={currentTask.taskPriority === "High"}
+                        className="text-red-500"
+                        value="High"
+                      >
                         High Priority{" "}
                       </option>{" "}
-                      <option className="text-yellow-500" value="Medium">
+                      <option
+                        selected={currentTask.taskPriority === "Medium"}
+                        className="text-yellow-500"
+                        value="Medium"
+                      >
                         {" "}
                         Medium Priority{" "}
                       </option>{" "}
-                      <option value="Low">Low Priority</option>{" "}
+                      <option
+                        selected={currentTask.taskPriority === "Low"}
+                        value="Low"
+                      >
+                        Low Priority
+                      </option>{" "}
                     </select>
                     <br />
                     <label htmlFor="date">Date</label>

@@ -6,6 +6,7 @@ import useAuth from "../../hooks/useAuth";
 const Home = () => {
   const { user, loading } = useAuth();
   const [tasks, setTasks] = useState([]);
+  const [reload, setReload] = useState(false);
   const email = user?.email;
   useEffect(() => {
     fetch(`http://localhost:3000/all-task?email=${email}`, {
@@ -15,14 +16,7 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((data) => setTasks(data));
-  }, [user, email]);
-
-  // const handleUpdateTask = (updatedTask) => {
-  //   const newTasks = tasks.map((task) =>
-  //     task._id === updatedTask._id ? updatedTask : task,
-  //   );
-  //   setTasks(newTasks);
-  // };
+  }, [user, email, reload]);
 
   if (loading) {
     return <span>Loading...</span>;
@@ -39,7 +33,11 @@ const Home = () => {
               task remaining
             </p>
           </div>
-          <TaskOverview tasks={tasks} onUpdate={setTasks}></TaskOverview>
+          <TaskOverview
+            tasks={tasks}
+            reload={reload}
+            setReload={setReload}
+          ></TaskOverview>
         </div>
         <aside className="col-span-2">
           <Momentum></Momentum>
