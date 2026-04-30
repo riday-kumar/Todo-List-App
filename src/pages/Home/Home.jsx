@@ -15,11 +15,14 @@ const Home = () => {
   console.log(user);
   useEffect(() => {
     if (user) {
-      fetch(`http://localhost:3000/all-task?email=${user?.email}`, {
-        headers: {
-          authorization: `Bearer ${user?.accessToken}`,
+      fetch(
+        `https://todo-api-server-side.vercel.app/all-task?email=${user?.email}`,
+        {
+          headers: {
+            authorization: `Bearer ${user?.accessToken}`,
+          },
         },
-      })
+      )
         .then((res) => res.json())
         .then((data) => {
           setTasks(data);
@@ -31,11 +34,14 @@ const Home = () => {
   //  task will show according to the calender
   const handleCalenderTask = (date) => {
     // console.log(date);
-    fetch(`http://localhost:3000/all-date-task/${date}?email=${user?.email}`, {
-      headers: {
-        authorization: `Bearer ${user?.accessToken}`,
+    fetch(
+      `https://todo-api-server-side.vercel.app/all-date-task/${date}?email=${user?.email}`,
+      {
+        headers: {
+          authorization: `Bearer ${user?.accessToken}`,
+        },
       },
-    })
+    )
       .then((res) => res.json())
       .then((data) => {
         setTasks(data);

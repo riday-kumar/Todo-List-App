@@ -21,7 +21,7 @@ const DashboardLayout = () => {
         toast.success("Log in Successful");
         const newUser = { email: result.user.email };
         // const userEmail = result.
-        fetch("http://localhost:3000/users", {
+        fetch("https://todo-api-server-side.vercel.app/users", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -79,14 +79,17 @@ const DashboardLayout = () => {
       completedTask,
     };
 
-    fetch(`http://localhost:3000/add-task?email=${user?.email}`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${user?.accessToken}`,
+    fetch(
+      `https://todo-api-server-side.vercel.app/add-task?email=${user?.email}`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${user?.accessToken}`,
+        },
+        body: JSON.stringify(newTask),
       },
-      body: JSON.stringify(newTask),
-    })
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.acknowledged) {

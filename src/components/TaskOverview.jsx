@@ -20,7 +20,7 @@ const TaskOverview = ({ tasks }) => {
 
   const handleUpdateTaskBtn = (id) => {
     updateModalRef.current.showModal();
-    fetch(`http://localhost:3000/all-task/${id}`)
+    fetch(`https://todo-api-server-side.vercel.app/all-task/${id}`)
       .then((res) => res.json())
       .then((data) => setCurrentTask({ ...data }));
   };
@@ -43,7 +43,7 @@ const TaskOverview = ({ tasks }) => {
 
     // console.log(updatedTask);
 
-    fetch(`http://localhost:3000/update-task/${id}`, {
+    fetch(`https://todo-api-server-side.vercel.app/update-task/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -62,12 +62,15 @@ const TaskOverview = ({ tasks }) => {
 
   // Task Delete Handler
   const handleTaskDelete = (id) => {
-    fetch(`http://localhost:3000/delete-task/${id}?email=${user?.email}`, {
-      method: "DELETE",
-      headers: {
-        authorization: `Bearer ${user?.accessToken}`,
+    fetch(
+      `https://todo-api-server-side.vercel.app/delete-task/${id}?email=${user?.email}`,
+      {
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${user?.accessToken}`,
+        },
       },
-    })
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -78,12 +81,15 @@ const TaskOverview = ({ tasks }) => {
 
   // handle Complete Task
   const handleCompleteTask = (id) => {
-    fetch(`http://localhost:3000/task-complete/${id}?email=${user?.email}`, {
-      method: "PATCH",
-      headers: {
-        authorization: `Bearer ${user?.accessToken}`,
+    fetch(
+      `https://todo-api-server-side.vercel.app/task-complete/${id}?email=${user?.email}`,
+      {
+        method: "PATCH",
+        headers: {
+          authorization: `Bearer ${user?.accessToken}`,
+        },
       },
-    })
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.acknowledged) {

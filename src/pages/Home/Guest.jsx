@@ -11,7 +11,7 @@ const Guest = () => {
         toast.success("Log in Successful");
         const newUser = { email: result.user.email };
         // const userEmail = result.
-        fetch("http://localhost:3000/users", {
+        fetch("https://todo-api-server-side.vercel.app/users", {
           method: "POST",
           headers: {
             "content-type": "application/json",
