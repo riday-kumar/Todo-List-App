@@ -105,7 +105,7 @@ const Home = () => {
               <div>
                 <input
                   onChange={(e) => handleCalenderTask(e.target.value)}
-                  className="text-primary text-2xl font-bold"
+                  className="text-white text-2xl font-bold bg-primary"
                   type="date"
                 />
               </div>

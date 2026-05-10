@@ -20,7 +20,9 @@ const ProgressBar = ({
 
   return (
     <div className="shadow-md p-5 rounded-2xl bg-white h-auto">
-      <p className="text-center mb-10 text-2xl font-semibold">Task Progress</p>
+      <p className="text-center mb-10 text-2xl font-semibold text-black">
+        Task Progress
+      </p>
       <div className="w-[50%] mx-auto">
         <CircularProgressbarWithChildren
           styles={buildStyles({

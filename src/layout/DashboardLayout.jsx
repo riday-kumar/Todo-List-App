@@ -111,7 +111,7 @@ const DashboardLayout = () => {
             <label
               htmlFor="my-drawer-4"
               aria-label="open sidebar"
-              className="btn btn-square btn-ghost"
+              className="btn btn-primary btn-square btn-ghost"
             >
               {/* Sidebar toggle icon */}
               <svg
@@ -162,13 +162,13 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="bg-[#f8fafc] flex min-h-full flex-col items-start is-drawer-close:w-14 is-drawer-open:w-64">
+        <div className="bg-white flex min-h-full flex-col items-start is-drawer-close:w-14 is-drawer-open:w-64">
           {/* Sidebar content here */}
           <ul className="menu w-full grow">
             {/* List item */}
             <li>
               <button
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                className="text-primary is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Homepage"
               >
                 {/* Home icon */}

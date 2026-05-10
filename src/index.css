@@ -1,15 +1,16 @@
 @import "tailwindcss";
 @plugin "daisyui";
 @plugin "daisyui/theme" {
-  name: "light";
+  themes: light;
   default: true;
+  color-scheme: light;
   --color-primary: #4f47e6;
   --color-secondary: teal;
 }
 
 input,
 textarea {
-  border: 3px solid gray;
+  border: 3px solid gray !important;
 }
 
 a.active {
