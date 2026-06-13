@@ -1,14 +1,10 @@
 #  🎯 Focus Flow
- A modern and user-friendly task management application designed to help users stay focused, organized, and productive.
-
-## 🌐 Live Demo
-Live Site :  https://todo-list-app-phi-topaz.vercel.app/
-
-## 📖 Overview
-
 FocusFlow is a modern task management application that helps users organize and track their daily activities efficiently.  
   
 Users can create, update, delete, and sort tasks by date while assigning priority levels (High, Medium, or Low) to better manage their workload. The application provides a visual progress tracker to monitor task completion and rewards users with a confetti celebration whenever a task is completed.
+
+## 🌐 Live Demo
+Live Site :  https://todo-list-app-phi-topaz.vercel.app/
 
 ## Key Learning
 Built using native Fetch API for server communication and React state management without external data-fetching libraries, demonstrating a strong understanding of core React concepts and browser APIs.
