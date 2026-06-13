@@ -146,7 +146,7 @@ const DashboardLayout = () => {
                 alt=""
               />
             ) : (
-              <FaUserCircle className="text-3xl" />
+              <FaUserCircle className="text-primary text-3xl" />
             )}
           </div>
         </nav>

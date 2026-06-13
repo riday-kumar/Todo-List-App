@@ -121,7 +121,7 @@ const TaskOverview = ({ tasks }) => {
             </div>
             {/*---------- task name , type ,time --------*/}
             <div>
-              <h2 className="capitalize text-2xl font-medium mb-3">
+              <h2 className="text-primary capitalize text-2xl font-medium mb-3">
                 {task.taskTitle}
               </h2>
               <div className="flex justify-start items-center gap-3">
@@ -130,10 +130,10 @@ const TaskOverview = ({ tasks }) => {
                 >
                   {task.taskPriority}
                 </p>
-                <div className="flex justify-center items-center gap-2">
+                <div className="flex justify-center items-center gap-2 text-secondary">
                   <FaCalendarAlt />
 
-                  <p className="font-bold">
+                  <p className="font-bold text-secondary">
                     {new Date(task.taskTime).toLocaleDateString("en-GB")}
                   </p>
                 </div>
